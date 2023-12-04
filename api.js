@@ -2,11 +2,18 @@ const { writeFileSync, existsSync, copyFileSync } = require('fs');
 const { config } = require('dotenv');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-config();
+
+const providedArgs = process.argv.slice(2);
 var date = new Date();
 date = date.setHours(date.getHours() - 6);
 var day = new Date(date).getDate();
-var url = 'https://adventofcode.com/2022/day/' + day + '/input';
+
+if (providedArgs.length > 0){
+    day = parseInt(providedArgs[0])
+}
+
+config();
+var url = `https://adventofcode.com/${process.env.YEAR}/day/${day}/input`;
 var path_input = `./inputs/input${day}.txt`;
 
 if (existsSync(path_input)) {
