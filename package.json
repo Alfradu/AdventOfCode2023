@@ -4,10 +4,8 @@
   "description": "aoc2023",
   "main": "index.js",
   "scripts": {
-    "today": "node index.js",
-    "today-test": "node index.js -test",
     "day": "node index.js -day ",
-    "day-test": "node index.js -test -day ",
+    "day-notest": "node index.js -notest -day ",
     "getInput": "node api.js"
   },
   "repository": {
@@ -24,7 +22,7 @@
   },
   "homepage": "https://github.com/Alfradu/AdventOfCode2023#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "node-fetch": "^3.3.0"
   }
 }

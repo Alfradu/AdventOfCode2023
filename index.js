@@ -4,65 +4,58 @@ const fs = require('fs');
 const dayFiles = fs.readdirSync('./days').filter(file => file.endsWith('.js')).sort((a, b) => parseInt(a.substring(3).split('.')[0]) > parseInt(b.substring(3).split('.')[0]) ? 1 : -1);
 
 const providedArgs = process.argv.slice(2);
-var runDay = dayFiles.length;
-var runTest = false;
+var date = new Date();
+date = date.setHours(date.getHours() - 6);
+var runDay = new Date(date).getDate();
+var runTest = true;
 
 for (let i = 0; i < providedArgs.length; i++) {
     if (providedArgs[i] == "-day" && providedArgs[i+1]) runDay = parseInt(providedArgs[i+1]);
-    if (providedArgs[i] == "-day" && !providedArgs[i+1]) {
-        console.log("-day argument needs a number")
-        process.exit(0);
-    }
-    if (providedArgs[i] == "-test") runTest = true;
+    if (providedArgs[i] == "-notest") runTest = false;
+}
+const dayFileName = `day${runDay}.js`
+const currDay = require(`./days/${dayFiles.find(f => f==dayFileName)}`);
+try{
+    if (runTest) runTests(currDay, 1)
+    runSolutions(currDay, 1)
+    if (runTest) runTests(currDay, 2)
+    runSolutions(currDay, 2)
+} catch (error) {
+    console.log("exiting early")
 }
 
-for (const file of dayFiles) {
-    if (file != dayFiles[runDay-1]) continue;
-    const day = require(`./days/${file}`);
-    if (runTest) runTests(day)
-    else runSolution(day)
-}
 
-function runSolution(day) {
+function runSolutions(day, solution) {
     var filename = `input${runDay}`;
+    var currSolution = solution == 1 ? day.part1 : day.part2;
     var input = fs.readFileSync('./inputs/' + filename + '.txt', 'utf8');
     try {
         var startTime = performance.now();
-        var ans = day.part1.solution(input);
+        var ans = currSolution.solution(input);
         var endTime = performance.now();
-        console.log(`Day ${runDay} Part 1 :: ms ${(endTime - startTime).toFixed(2)} :: ${ans}`);
+        console.log(`Day ${runDay} Part ${solution} :: ms ${(endTime - startTime).toFixed(2)} :: ${ans}`);
     }
-    catch (error) { logError(error, 1, '') }
-    try {
-        var startTime = performance.now();
-        var ans = day.part2.solution(input);
-        var endTime = performance.now();
-        console.log(`Day ${runDay} Part 2 :: ms ${(endTime - startTime).toFixed(2)} :: ${ans}`);
+    catch (error) { 
+        logError(error, solution, '');
+        throw {name: "SolutionError", message: "Solution failed"};
     }
-    catch (error) { logError(error, 2, '') }
 }
 
-function runTests(day) {
+function runTests(day, solution) {
+    var currSolution = solution == 1 ? day.part1 : day.part2;
     try {
-        var tests = day.part1.tests;
-        if (tests.length < 1) throw {name : "NoTestsError", message : "no tests found for part 1"}; 
+        var tests = currSolution.tests;
+        if (tests.length < 1) throw {name : "FailingTestError", message : "no tests found for part " + solution}; 
         for (let i = 0; i < tests.length; i++) {
-            var ans = day.part1.solution(tests[i].input);
-            if (ans != tests[i].expected) console.log(`Day ${runDay} Part 1 Test ${i+1} failed. Expected ${tests[i].expected} but got ${ans}`);
-            else console.log(`Day ${runDay} Part 1 Test ${i+1} succeded`);
+            var ans = currSolution.solution(tests[i].input);
+            if (ans != tests[i].expected) throw {name : "FailingTestError", message : `Day ${runDay} Part ${solution} Test ${i+1} failed. Expected ${tests[i].expected} but got ${ans}`}; 
+            else console.log(`Day ${runDay} Part ${solution} Test ${i+1} succeded`);
         }
     }
-    catch (error) { logError(error, 1, 'tests for') }
-    try {
-        var tests = day.part2.tests;
-        if (tests.length < 1) throw {name : "NoTestsError", message : "no tests found for part 2"}; 
-        for (let i = 0; i < tests.length; i++) {
-            var ans = day.part2.solution(tests[i].input);
-            if (ans != tests[i].expected) console.log(`Day ${runDay} Part 2 Test ${i+1} failed. Expected ${tests[i].expected} but got ${ans}`);
-            else console.log(`Day ${runDay} Part 2 Test ${i+1} succeded `);
-        }
+    catch (error) { 
+        logError(error, solution, 'tests for');
+        throw {name: "TestError", message: "tests failed"};
     }
-    catch (error) { logError(error, 2, 'tests for') }
 }
 
 function logError(err, part, test){
