@@ -1,7 +1,7 @@
 {
-  "name": "aoc2022",
+  "name": "aoc2023",
   "version": "1.0.0",
-  "description": "aoc2022",
+  "description": "aoc2023",
   "main": "index.js",
   "scripts": {
     "today": "node index.js",
@@ -12,17 +12,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Alfradu/AdventOfCode2022.git"
+    "url": "git+https://github.com/Alfradu/AdventOfCode2023.git"
   },
   "keywords": [
-    "aoc2022"
+    "aoc2023"
   ],
   "author": "Alfred Radu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Alfradu/AdventOfCode2022/issues"
+    "url": "https://github.com/Alfradu/AdventOfCode2023/issues"
   },
-  "homepage": "https://github.com/Alfradu/AdventOfCode2022#readme",
+  "homepage": "https://github.com/Alfradu/AdventOfCode2023#readme",
   "dependencies": {
     "dotenv": "^16.0.3",
     "node-fetch": "^3.3.0"
