@@ -1,0 +1,6 @@
+.env
+.vscode
+inputs
+COOKIE.txt
+package-lock.json
+node_modules
