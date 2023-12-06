@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "day": "node index.js -day ",
+    "day-part2": "node index.js -part2 -day ",
     "day-notest": "node index.js -notest -day ",
+    "day-notest-part2": "node index.js -notest -part2 -day ",
     "getInput": "node api.js"
   },
   "repository": {

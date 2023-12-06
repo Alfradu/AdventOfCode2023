@@ -8,16 +8,18 @@ var date = new Date();
 date = date.setHours(date.getHours() - 6);
 var runDay = new Date(date).getDate();
 var runTest = true;
+var part2Only = false;
 
 for (let i = 0; i < providedArgs.length; i++) {
     if (providedArgs[i] == "-day" && providedArgs[i+1]) runDay = parseInt(providedArgs[i+1]);
     if (providedArgs[i] == "-notest") runTest = false;
+    if (providedArgs[i] == "-part2") part2Only = true;
 }
 const dayFileName = `day${runDay}.js`
 const currDay = require(`./days/${dayFiles.find(f => f==dayFileName)}`);
 try{
-    if (runTest) runTests(currDay, 1)
-    runSolutions(currDay, 1)
+    if (runTest && !part2Only) runTests(currDay, 1)
+    if (!part2Only) runSolutions(currDay, 1)
     if (runTest) runTests(currDay, 2)
     runSolutions(currDay, 2)
 } catch (error) {
